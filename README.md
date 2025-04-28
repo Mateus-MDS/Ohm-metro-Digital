@@ -59,4 +59,4 @@ Pressione B para entrar em modo BOOTSEL e atualizar o código via USB.
 Autor:
 Nome: Mateus Moreira da Silva
 
-Repositório: GitHub
+Repositório: GitHub: https://github.com/Mateus-MDS/Ohm-metro-Digital.git

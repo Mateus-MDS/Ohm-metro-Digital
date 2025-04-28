@@ -1,64 +1,62 @@
-Ohmímetro Digital - Indentificação de Resistores Comerciais da Séria E24, Na BitDogLab
+OhmÃ­metro Digital - IndentificaÃ§Ã£o de Resistores Comerciais da SÃ©ria E24, Na BitDogLab
 
-Descrição
-O ohmímetro digital mede resistências de 500 ? até 100 k? usando um divisor de tensão e o ADC interno do Raspberry Pi Pico. O valor medido é arredondado conforme a série E24 e exibido no display OLED, junto com as três faixas de cores (dois dígitos significativos e multiplicador). Simultaneamente, a matriz de LEDs 5×5 pinta cada linha principal com a cor correspondente a cada faixa. Em caso de falha na leitura, o OLED mostra mensagem de erro e os LEDs permanecem apagados.
+DescriÃ§Ã£o
+O ohmÃ­metro digital mede resistÃªncias de 500 ? atÃ© 100 k? usando um divisor de tensÃ£o e o ADC interno do Raspberry Pi Pico. O valor medido Ã© arredondado conforme a sÃ©rie E24 e exibido no display OLED, junto com as trÃªs faixas de cores (dois dÃ­gitos significativos e multiplicador). Simultaneamente, a matriz de LEDs 5Ã—5 pinta cada linha principal com a cor correspondente a cada faixa. Em caso de falha na leitura, o OLED mostra mensagem de erro e os LEDs permanecem apagados.
 
 Objetivos
 Medir automaticamente resistores entre 500 ? e 100 k?.
-Aproximar o valor medido à série comercial E24.
-Exibir no OLED o valor E24 e as cores das três faixas.
+Aproximar o valor medido Ã  sÃ©rie comercial E24.
+Exibir no OLED o valor E24 e as cores das trÃªs faixas.
 Mostrar visualmente as faixas na matriz de LEDs.
-Permitir atualização de firmware via botão B (modo BOOTSEL).
-Registrar log de diagnóstico via USB a cada segundo.
+Permitir atualizaÃ§Ã£o de firmware via botÃ£o B (modo BOOTSEL).
+Registrar log de diagnÃ³stico via USB a cada segundo.
 
 Componentes Utilizados
-Componente - Conexão BitDogLab - Função no Projeto
+Componente - ConexÃ£o BitDogLab - FunÃ§Ã£o no Projeto
 
 Raspberry Pi Pico -	Microcontrolador principal
-Resistor de 10 k? - Entre 3,3 V e GP28 - Referência fixa no divisor de tensão
-Resistor sob teste - Entre GP28 e GND - Componente cuja resistência será medida
-Display OLED SSD1306 - I²C (GP14 SDA, GP15 SCL) - Exibição de valor e cores
-Matriz de LEDs 5×5 - PIO (GP7) - Visualização das três faixas de cor
-Botão B	- GP6 - Dispara interrupção para modo BOOTSEL
-USB Serial- USB - Log de diagnóstico via terminal
+Resistor de 10 k? - Entre 3,3 V e GP28 - ReferÃªncia fixa no divisor de tensÃ£o
+Resistor sob teste - Entre GP28 e GND - Componente cuja resistÃªncia serÃ¡ medida
+Display OLED SSD1306 - IÂ²C (GP14 SDA, GP15 SCL) - ExibiÃ§Ã£o de valor e cores
+Matriz de LEDs 5Ã—5 - PIO (GP7) - VisualizaÃ§Ã£o das trÃªs faixas de cor
+BotÃ£o B	- GP6 - Dispara interrupÃ§Ã£o para modo BOOTSEL
+USB Serial- USB - Log de diagnÃ³stico via terminal
 
 Funcionamento
-Modo de medição:
-No loop principal, o Pico faz 500 leituras do ADC para calcular a média da tensão no resistor desconhecido. Com base na lei do divisor de tensão e no resistor de referência de 10 k?, calcula-se o valor de resistência R_x. Em seguida, verifica-se se R_x está dentro da faixa válida (500 ? a 100 k?). Se estiver fora, o display OLED exibe uma mensagem informando que a medição só funciona nesse intervalo.
-Se R_x for válido, o programa busca no vetor da série E24 o valor comercial mais próximo, escolhendo aquele que apresenta o menor erro em relação à medição. A rotina de cores então separa os dois primeiros dígitos e o multiplicador desse valor, mapeando cada parte para as cores das três faixas. O OLED mostra, em três linhas, as cores correspondentes e o valor E24; simultaneamente, a matriz de LEDs 5×5 pinta cada linha principal com a cor de cada faixa. Por fim, um log periódico via USB imprime no terminal o primeiro dígito e a resistência medida para fins de diagnóstico.
+Modo de mediÃ§Ã£o:
+No loop principal, o Pico faz 500 leituras do ADC para calcular a mÃ©dia da tensÃ£o no resistor desconhecido. Com base na lei do divisor de tensÃ£o e no resistor de referÃªncia de 10 k?, calcula-se o valor de resistÃªncia R_x. Em seguida, verifica-se se R_x estÃ¡ dentro da faixa vÃ¡lida (500 ? a 100 k?). Se estiver fora, o display OLED exibe uma mensagem informando que a mediÃ§Ã£o sÃ³ funciona nesse intervalo.
+Se R_x for vÃ¡lido, o programa busca no vetor da sÃ©rie E24 o valor comercial mais prÃ³ximo, escolhendo aquele que apresenta o menor erro em relaÃ§Ã£o Ã  mediÃ§Ã£o. A rotina de cores entÃ£o separa os dois primeiros dÃ­gitos e o multiplicador desse valor, mapeando cada parte para as cores das trÃªs faixas. O OLED mostra, em trÃªs linhas, as cores correspondentes e o valor E24; simultaneamente, a matriz de LEDs 5Ã—5 pinta cada linha principal com a cor de cada faixa. Por fim, um log periÃ³dico via USB imprime no terminal o primeiro dÃ­gito e a resistÃªncia medida para fins de diagnÃ³stico.
 
 Modo BOOTSEL: 
-Ao pressionar o Botão B conectado à interrupção, dispara-se o handler que chama reset_usb_boot(), reiniciando o Pico em modo de boot por USB. Esse modo permite atualizar o firmware diretamente, sem necessidade de reconectar manualmente o cabo no modo de inicialização.
+Ao pressionar o BotÃ£o B conectado Ã  interrupÃ§Ã£o, dispara-se o handler que chama reset_usb_boot(), reiniciando o Pico em modo de boot por USB. Esse modo permite atualizar o firmware diretamente, sem necessidade de reconectar manualmente o cabo no modo de inicializaÃ§Ã£o.
 
-Lógicas de suportes: 
-Debounce e Interrupções: O GPIO do Botão B usa pull-up interno e interrupção em borda de descida para resposta imediata e sem bouncing.
-Controle de Periféricos: I²C inicializa o SSD1306; o PIO carrega e executa o programa de animação da matriz de LEDs; o ADC é configurado para entrada analógica no pino 28.
-Fluxo de Loop: O loop principal alterna entre leitura do ADC, cálculo de resistência, atualização de display/LEDs e log USB, garantindo responsividade e clareza na indicação do valor medido.
+LÃ³gicas de suportes: 
+Debounce e InterrupÃ§Ãµes: O GPIO do BotÃ£o B usa pull-up interno e interrupÃ§Ã£o em borda de descida para resposta imediata e sem bouncing.
+Controle de PerifÃ©ricos: IÂ²C inicializa o SSD1306; o PIO carrega e executa o programa de animaÃ§Ã£o da matriz de LEDs; o ADC Ã© configurado para entrada analÃ³gica no pino 28.
+Fluxo de Loop: O loop principal alterna entre leitura do ADC, cÃ¡lculo de resistÃªncia, atualizaÃ§Ã£o de display/LEDs e log USB, garantindo responsividade e clareza na indicaÃ§Ã£o do valor medido.
 
-Estrutura do Código
-Inicialização:
+Estrutura do CÃ³digo
+InicializaÃ§Ã£o:
 
-Configuração de GPIOs, ADC, I2C e PIO
-Inicialização do display OLED
-Carregamento dos padrões para matriz de LEDs
+ConfiguraÃ§Ã£o de GPIOs, ADC, I2C e PIO
+InicializaÃ§Ã£o do display OLED
+Carregamento dos padrÃµes para matriz de LEDs
 
 Leitura de Entradas:
 
 Leitor ADC GPIO 28
-Botão (com debounce de 50ms)
+BotÃ£o (com debounce de 50ms)
 
 Como Executar o Projeto:
 
-Conecte o resistor de referência de 10 k? entre 3,3 V e GP28; insira o resistor a testar entre GP28 e GND.
+Conecte o resistor de referÃªncia de 10 k? entre 3,3 V e GP28; insira o resistor a testar entre GP28 e GND.
 Ligue o OLED (GP14 SDA, GP15 SCL) e a matriz de LEDs (GP7 via PIO).
 Conecte o Pico ao PC via USB.
 Compile e grave o firmware no RP2040.
-Ao energizar, o sistema inicia medição contínua.
-Pressione B para entrar em modo BOOTSEL e atualizar o código via USB.
+Ao energizar, o sistema inicia mediÃ§Ã£o contÃ­nua.
+Pressione B para entrar em modo BOOTSEL e atualizar o cÃ³digo via USB.
 
 Autor:
 Nome: Mateus Moreira da Silva
 
-Repositório: GitHub
-
-Vídeo de Demonstração: YouTube
+RepositÃ³rio: GitHub
